@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Room with Three.js</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      // Create scene, camera, and renderer
+      // Create a scene
+      const scene = new THREE.Scene();
+
+      // Create a camera
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.z = 10;
+
+      // Create a renderer
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // Create a room
+      const roomGeometry = new THREE.BoxGeometry(31.7, 31.7, 8); // 1000 sqft room
+      const roomMaterial = new THREE.MeshBasicMaterial({ color: 0xcccccc });
+      const room = new THREE.Mesh(roomGeometry, roomMaterial);
+      scene.add(room);
+
+      // Add some random interior objects
+      const objects = [
+        {
+          geometry: new THREE.BoxGeometry(1, 1, 1),
+          material: new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+        }, // chair
+        {
+          geometry: new THREE.CylinderGeometry(0.5, 0.5, 2),
+          material: new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+        }, // table
+        {
+          geometry: new THREE.SphereGeometry(0.5),
+          material: new THREE.MeshBasicMaterial({ color: 0x0000ff }),
+        }, // lamp
+        {
+          geometry: new THREE.BoxGeometry(2, 2, 4),
+          material: new THREE.MeshBasicMaterial({ color: 0xffffff }),
+        }, // bookshelf
+        {
+          geometry: new THREE.ConeGeometry(0.5, 2),
+          material: new THREE.MeshBasicMaterial({ color: 0xff00ff }),
+        }, // vase
+      ];
+
+      const numObjects = 20;
+      for (let i = 0; i < numObjects; i++) {
+        const object = objects[Math.floor(Math.random() * objects.length)];
+        const mesh = new THREE.Mesh(object.geometry, object.material);
+        mesh.position.x = Math.random() * 29.4 - 14.7; // random x position within the room
+        mesh.position.y = Math.random() * 29.4 - 14.7; // random y position within the room
+        mesh.position.z = Math.random() * 6 + 2; // random z position within the room
+        scene.add(mesh);
+      }
+
+      // Create a render loop
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
+</html>
